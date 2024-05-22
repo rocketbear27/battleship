@@ -116,8 +116,10 @@ public class Main {
         player1.printGameBoard(gameBoard1);
         player1.getInput(gameBoard1);
 
-        Main player2= new Main();
-        String[][] gameBoard2 = 
+        Main player2 = new Main();
+        String[][] gameBoard2 = player2.createGame();
+        player2.printGameBoard(gameBoard2);
+        player2.getInput(gameBoard2); 
         }
 }
 /*
