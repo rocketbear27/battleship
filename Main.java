@@ -7,6 +7,7 @@
  * - GUI
  * - AI
  * - Call Zahn, Derek on last day of school
+ * - Trevin Andrews
  */
 import java.util.Scanner;
 public class Main {
