@@ -6,9 +6,6 @@
  * - Check win/lose
  * - GUI
  * - AI
- * - Call Zahn, Derek on last day of school
- * - Trevin Andrews
- * - Kaden Shin
  */
 import java.util.Scanner;
 public class Main {
@@ -89,14 +86,12 @@ public class Main {
         }
         return true;
     }
-    public static void main(String[] args) {
+
+    public void getInput(String[][] gb1) {
         Main obj = new Main();
-        String[][] gameBoard1 = obj.createGame();
-        obj.printGameBoard(gameBoard1);
         Scanner myObj = new Scanner(System.in);
         int[] lengths = { 5, 4, 3, 3, 2 };
         for (int z = 0; z < lengths.length; z++) {
-            
             System.out.println("Enter Letter coordinates for Ship " + (z+1) + " (Ship Length " + lengths[z] + ")");
             String letter = myObj.nextLine();
             char char1 = letter.charAt(0);
@@ -105,18 +100,26 @@ public class Main {
             myObj.nextLine();
             System.out.println("Enter Orientation for Ship (Horizontal or Vertical)");
             String orientation2 = myObj.nextLine();
-            if (obj.checkCoordinateValidity(char1, number, lengths[z], orientation2, gameBoard1) == false) {
+            if (obj.checkCoordinateValidity(char1, number, lengths[z], orientation2, gb1) == false) {
                 System.out.println("Invalid coordinates, try again.");
                 z--;
             } 
             else {
-                obj.placeShip(char1, number, lengths[z], orientation2, gameBoard1);
-                obj.printGameBoard(gameBoard1);
+                obj.placeShip(char1, number, lengths[z], orientation2, gb1);
+                obj.printGameBoard(gb1);
             }
         }
     }
-}
+    public static void main(String[] args) {
+        Main player1 = new Main();
+        String[][] gameBoard1 = player1.createGame();
+        player1.printGameBoard(gameBoard1);
+        player1.getInput(gameBoard1);
 
+        Main player2= new Main();
+        String[][] gameBoard2 = 
+        }
+}
 /*
  * Ship lengths: 5, 4, 3, 3, 2
  */
