@@ -4,7 +4,9 @@
  * - 2 player
  * - Shooting, hitting, missing, etc.
  * - Check win/lose
- * - GUI/AI
+ * - GUI
+ * - AI
+ * - Call Zahn, Derek on last day of school
  */
 import java.util.Scanner;
 public class Main {
