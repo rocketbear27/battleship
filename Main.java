@@ -8,6 +8,7 @@
  * - AI
  * - Call Zahn, Derek on last day of school
  * - Trevin Andrews
+ * - Kaden Shin
  */
 import java.util.Scanner;
 public class Main {
