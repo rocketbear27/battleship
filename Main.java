@@ -4,7 +4,7 @@
   - catch errors (Typing H5 instead of H)
   - scoreboard
     * display ship sunken score
-
+  -after blue finishes placing ships, it auto switches to red (so blue might see ships, fix)
  * - connect brown background to the ship
  * - GUI
  * - AI
