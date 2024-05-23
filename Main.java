@@ -2,13 +2,10 @@
 /*
  * Todo:
   - catch errors (Typing H5 instead of H)
-  - sink ship (red background) + scoreboard
-    * Ship class that has information on coordinates, length, orientation, and boolean array of hits
-    * if entire boolean array is true, ship is sunk
-    * main class changes: after user inputs for 5 ships, you have to make a ship object for EACH of them (10 obj in total)
-    * after each hit, change the boolean array of hits to true, then check if than ship has boolean array thats all true.
-    * display ship sunken score 
-    * brown background of sunken ships
+  - scoreboard
+    * display ship sunken score
+
+ * - connect brown background to the ship
  * - GUI
  * - AI
  */

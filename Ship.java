@@ -54,4 +54,8 @@ public class Ship {
         }
         return coordinates;
     }
+
+    public String getOrientation() {
+        return orientation;
+    }
 }
