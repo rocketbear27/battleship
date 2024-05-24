@@ -1,8 +1,12 @@
 
 /*
  * Todo:
-  - catch errors (Typing H5 instead of H)
- * - GUI
+ * - GUI (just alter exisitng code to display stuff)
+    * figure out how to make window that shows everything 
+    * make gameboard, ships, hit/miss squares
+    * maybe implement clicking instead of typing (very hard)
+    * implement pop-up messages? that shows try again or win screen (not nescessary)
+ * - GUI still to add
     * backgrounds of ship are not connected
  * - AI
  */
