@@ -9,39 +9,49 @@ public class Battleship {
     public void placeShip(Player player) {
         int[] lengths = {5, 4, 3, 3, 2};
         for (int z = 0; z < lengths.length; z++) {
-            System.out.println("Enter Letter coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
-            String letter = scanner.nextLine();
-            if (letter.isEmpty()) {
-                System.out.println("Invalid input, please enter a letter coordinate.");
-                z--;
-                continue;
-            }
-            char char1 = letter.charAt(0);
-            System.out.println("Enter Number coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
-            if (!scanner.hasNextInt()) {
-                System.out.println("Invalid input, please enter a number coordinate.");
-                scanner.next(); // clear the invalid input
-                z--;
-                continue;
-            }
-            int number = scanner.nextInt();
-            scanner.nextLine(); // consume the newline character
-            System.out.println("Enter Orientation for Ship (Horizontal(H) or Vertical(V))");
-            String orientation2 = scanner.nextLine();
-            if (orientation2.isEmpty() || (!orientation2.equalsIgnoreCase("H") && !orientation2.equalsIgnoreCase("V"))) {
-                System.out.println("Invalid input, please enter a valid orientation (H or V).");
-                z--;
-                continue;
-            }
-            if (!checkCoordinateValidity(char1, number, lengths[z], orientation2, player.getGameBoard())) {
-                System.out.println("Invalid coordinates, try again.");
-                z--;
-            } else {
-                placeShipOnBoard(char1, number, lengths[z], orientation2, player.getGameBoard());
-                player.getShips().add(new Ship(char1, number, lengths[z], orientation2));
-                printGameBoard(player.getGameBoard());
+            boolean validInput = false;
+            while (!validInput) {
+                try {
+                    System.out.println("Enter Letter coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
+                    String letter = scanner.nextLine();
+                    if (letter.isEmpty()) {
+                        System.out.println("Invalid input, please enter a letter coordinate.");
+                        continue;
+                    }
+                    char char1 = letter.charAt(0);
+                    System.out.println("Enter Number coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
+                    if (!scanner.hasNextInt()) {
+                        System.out.println("Invalid input, please enter a number coordinate.");
+                        scanner.next(); // clear the invalid input
+                        continue;
+                    }
+                    int number = scanner.nextInt();
+                    scanner.nextLine(); // consume the newline character
+                    System.out.println("Enter Orientation for Ship (Horizontal(H) or Vertical(V))");
+                    String orientation2 = scanner.nextLine();
+                    if (orientation2.isEmpty() || (!orientation2.equalsIgnoreCase("H") && !orientation2.equalsIgnoreCase("V"))) {
+                        System.out.println("Invalid input, please enter a valid orientation (H or V).");
+                        continue;
+                    }
+                    if (!checkCoordinateValidity(char1, number, lengths[z], orientation2, player.getGameBoard())) {
+                        System.out.println("Invalid coordinates, try again.");
+                    } else {
+                        placeShipOnBoard(char1, number, lengths[z], orientation2, player.getGameBoard());
+                        player.getShips().add(new Ship(char1, number, lengths[z], orientation2));
+                        printGameBoard(player.getGameBoard());
+                        validInput = true;
+                    }
+                } 
+                catch (Exception e) {
+                    System.out.println("Invalid input, please try again.");
+                    scanner.nextLine(); // Clear invalid input
+                }
             }
         }
+
+        clearScreen();
+        System.out.println("Switch turns");
+        delay(3000);
     }
 
     private void placeShipOnBoard(char row, int col, int length, String orientation, String[][] gameboard) {
@@ -159,10 +169,33 @@ public class Battleship {
                     gameBoard2[i][j] = "O";
                     return false;
                 }
-            } catch (Exception e) {
-                System.out.println("Please try again.");
+            } 
+            catch (Exception e) {
+                System.out.println("Invalid input, please try again.");
+                scanner.nextLine(); // Clear invalid input
             }
         }
+    }
+
+    public static void printScoreboard(Player one, Player two) {
+        int playerOneLeft = 5;
+        int playerTwoLeft = 5;
+    
+        for (Ship ship : one.getShips()) {
+            if (ship.isSunk()) {
+                playerOneLeft--;
+            }
+        }
+    
+        for (Ship ship : two.getShips()) {
+            if (ship.isSunk()) {
+                playerTwoLeft--;
+            }
+        }
+    
+        System.out.println("Scoreboard:");
+        System.out.println(one.getName() + " Ships Left - " + playerOneLeft);
+        System.out.println(two.getName() + " Ships Left - " + playerTwoLeft);
     }
 
     private void updateBoardForSunkenShip(Ship ship, String[][] attackBoard, String[][] gameBoard2) {
