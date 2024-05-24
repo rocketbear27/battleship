@@ -8,7 +8,7 @@
     * implement pop-up messages? that shows try again or win screen (not nescessary)
  * - GUI still to add
     * backgrounds of ship are not connected
- * - AI.
+ * - AI
  */
 
  /*
