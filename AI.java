@@ -45,24 +45,20 @@ public class AI {
         }
     }
 
-    // Method to attack strategically (Medium AI)
     public boolean attackMedium(Player aiPlayer, Player humanPlayer) {
         // Implementation of medium AI attack logic
         return false; // Placeholder
     }
 
-    // Method to place ships strategically (Hard AI)
     public void placeShipsHard(Player aiPlayer) {
         placeShipsMedium(aiPlayer);
     }
 
-    // Method to attack strategically (Hard AI)
     public boolean attackHard(Player aiPlayer, Player humanPlayer) {
         // Implementation of hard AI attack logic
         return false; // Placeholder
     }
 
-    // Common method for random attacks used in Easy and Medium AI
     private boolean randomAttack(Player aiPlayer, Player humanPlayer) {
         while (true) {
             char row = (char) (random.nextInt(10) + 'A');
@@ -73,7 +69,6 @@ public class AI {
         }
     }
 
-    // Helper method to check if the placement touches other ships
     private boolean touchingOtherShips(char row, int col, int length, String orientation, String[][] gameBoard) {
         int i = row - 'A' + 1;
         int j = col;
