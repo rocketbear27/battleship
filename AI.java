@@ -4,13 +4,13 @@ public class AI {
     private Random random = new Random();
 
     public void placeShipsEasy(Player aiPlayer) {
-        int[] lengths = {5, 4, 3, 3, 2};
+        int[] lengths = { 5, 4, 3, 3, 2 };
         for (int length : lengths) {
             boolean placed = false;
             while (!placed) {
                 char row = (char) ((int) (Math.random() * 10) + 'A');
                 int col = (int) (Math.random() * 10) + 1;
-                String[] orientations = {"H", "V"};
+                String[] orientations = { "H", "V" };
                 String orientation = orientations[(int) (Math.random() * orientations.length)];
                 if (Battleship.checkCoordinateValidity(row, col, length, orientation, aiPlayer.getGameBoard())) {
                     Battleship.placeShipOnBoard(row, col, length, orientation, aiPlayer.getGameBoard());
@@ -26,13 +26,13 @@ public class AI {
     }
 
     public void placeShipsMedium(Player aiPlayer) {
-        int[] lengths = {5, 4, 3, 3, 2};
+        int[] lengths = { 5, 4, 3, 3, 2 };
         for (int length : lengths) {
             boolean placed = false;
             while (!placed) {
                 char row = (char) ((int) (Math.random() * 10) + 'A');
                 int col = (int) (Math.random() * 10) + 1;
-                String[] orientations = {"H", "V"};
+                String[] orientations = { "H", "V" };
                 String orientation = orientations[(int) (Math.random() * orientations.length)];
                 if (Battleship.checkCoordinateValidity(row, col, length, orientation, aiPlayer.getGameBoard())) {
                     if (!touchingOtherShips(row, col, length, orientation, aiPlayer.getGameBoard())) {
@@ -89,8 +89,8 @@ public class AI {
     }
 
     private boolean isAdjacentOccupied(int i, int j, String[][] gameBoard) {
-        int[] x = {-1, 0, 1, 0};
-        int[] y = {0, 1, 0, -1};
+        int[] x = { -1, 0, 1, 0 };
+        int[] y = { 0, 1, 0, -1 };
         for (int k = 0; k < 4; k++) {
             int a = i + x[k];
             int b = j + y[k];
