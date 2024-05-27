@@ -3,8 +3,6 @@ import java.util.Scanner;
 
 public class Battleship {
     private Scanner scanner = new Scanner(System.in);
-    private static final String BROWN_BACKGROUND = "\u001B[43m";
-    private static final String RESET = "\u001B[0m";
 
     public void placeShip(Player player) {
         int[] lengths = {5, 4, 3, 3, 2};
@@ -54,7 +52,7 @@ public class Battleship {
         delay(3000);
     }
 
-    private void placeShipOnBoard(char row, int col, int length, String orientation, String[][] gameboard) {
+    public static void placeShipOnBoard(char row, int col, int length, String orientation, String[][] gameboard) {
         orientation = orientation.toUpperCase();
         row = Character.toUpperCase(row);
         int i = (int) row - 65 + 1;
@@ -70,7 +68,7 @@ public class Battleship {
         }
     }
 
-    private boolean checkCoordinateValidity(char row, int col, int length, String orientation, String[][] gameboard) {
+    public static boolean checkCoordinateValidity(char row, int col, int length, String orientation, String[][] gameboard) {
         orientation = orientation.toUpperCase();
         row = Character.toUpperCase(row);
         int i = (int) row - 65 + 1;
@@ -80,7 +78,7 @@ public class Battleship {
                 return false;
             }
             for (int a = 0; a < length; a++) {
-                if (gameboard[i][j + a] == "+") {
+                if (gameboard[i][j + a].equals("+")) {
                     return false;
                 }
             }
@@ -89,12 +87,18 @@ public class Battleship {
                 return false;
             }
             for (int a = 0; a < length; a++) {
-                if (gameboard[i + a][j] == "+") {
+                if (gameboard[i + a][j].equals("+")) {
                     return false;
                 }
             }
         }
         return true;
+    }
+
+    public static boolean isValidAttack(char row, int col, String[][] attackBoard) {
+        int i = (int) row - 65 + 1;
+        int j = col;
+        return attackBoard[i][j].equals("-");
     }
 
     public boolean attack(Player attacker, Player defender) {
@@ -177,6 +181,51 @@ public class Battleship {
         }
     }
 
+    public static boolean aiAttack(Player attacker, Player defender, char row, int col) {
+        int i = (int) row - 65 + 1;
+        int j = col;
+        String[][] attackBoard = attacker.getAttackBoard();
+        String[][] gameBoard2 = defender.getGameBoard();
+        ArrayList<Ship> opponentShips = defender.getShips();
+    
+        if (!attackBoard[i][j].equals("-")) {
+            return false;
+        }
+    
+        boolean hit = false;
+        boolean sunk = false;
+        Ship sunkenShip = null;
+        for (Ship ship : opponentShips) {
+            if (ship.registerHit(row, col)) {
+                hit = true;
+                if (ship.isSunk()) {
+                    sunk = true;
+                    sunkenShip = ship;
+                    updateBoardForSunkenShip(ship, attackBoard, gameBoard2);
+                }
+                break;
+            }
+        }
+    
+        if (hit) {
+            System.out.println("Hit");
+            attackBoard[i][j] = "X";
+            gameBoard2[i][j] = "X";
+            if (sunk && sunkenShip != null) {
+                System.out.println("Ship Sunk");
+                updateBoardForSunkenShip(sunkenShip, attackBoard, gameBoard2);
+            }
+            return true;
+        } else {
+            System.out.println("Miss");
+            attackBoard[i][j] = "O";
+            gameBoard2[i][j] = "O";
+            return false;
+        }
+    }
+    
+    
+
     public static void printScoreboard(Player one, Player two) {
         int playerOneLeft = 5;
         int playerTwoLeft = 5;
@@ -198,13 +247,13 @@ public class Battleship {
         System.out.println(two.getName() + " Ships Left - " + playerTwoLeft);
     }
 
-    private void updateBoardForSunkenShip(Ship ship, String[][] attackBoard, String[][] gameBoard2) {
+    public static void updateBoardForSunkenShip(Ship ship, String[][] attackBoard, String[][] gameBoard2) {
         ArrayList<int[]> coordinates = ship.getCoordinates();
         for (int[] coord : coordinates) {
             int i = coord[0];
             int j = coord[1];
-            attackBoard[i][j] = BROWN_BACKGROUND + "X" + RESET;
-            gameBoard2[i][j] = BROWN_BACKGROUND + "X" + RESET;
+            attackBoard[i][j] = "\u001B[43mX\u001B[0m";  // BROWN_BACKGROUND
+            gameBoard2[i][j] = "\u001B[43mX\u001B[0m";   // BROWN_BACKGROUND
         }
     }
 
@@ -236,6 +285,69 @@ public class Battleship {
             Thread.sleep(milliseconds);
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
+        }
+    }
+
+    public void setupPlayer(Player player) {
+        boolean validInput = false;
+        while (!validInput) {
+            try {
+                printGameBoard(player.getGameBoard());
+                placeShip(player);
+                validInput = true;
+            } catch (Exception e) {
+                System.out.println("Please try again.");
+            }
+        }
+        clearScreen();
+    }
+
+    public void playGame(Player player1, Player player2) {
+        while (!ifPlayerHasWon(player1) && !ifPlayerHasWon(player2)) {
+            boolean player1Turn = true;
+            while (player1Turn) {
+                try {
+                    player1Turn = attack(player1, player2);
+                    if (ifPlayerHasWon(player2)) {
+                        break;
+                    }
+                    if (!player1Turn) {
+                        clearScreen();
+                        System.out.println("Switch Turns");
+                        printScoreboard(player1, player2);
+                        delay(3000);
+                        clearScreen();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Please try again.");
+                }
+            }
+            while (!player1Turn) {
+                try {
+                    player1Turn = !attack(player2, player1);
+                    if (ifPlayerHasWon(player1)) {
+                        break;
+                    }
+                    if (player1Turn) {
+                        clearScreen();
+                        System.out.println("Switch Turns");
+                        printScoreboard(player1, player2);
+                        delay(3000);
+                        clearScreen();
+                    }
+                } catch (Exception e) {
+                    System.out.println("Please try again.");
+                }
+            }
+        }
+
+        if (ifPlayerHasWon(player2)) {
+            clearScreen();
+            System.out.println("Team Red Has Won");
+        }
+        if (ifPlayerHasWon(player1)) {
+            clearScreen();
+            System.out.println("Team Blue Has Won");
         }
     }
 }
