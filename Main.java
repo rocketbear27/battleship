@@ -26,7 +26,8 @@ public class Main {
             game.setupPlayer(player2);
 
             game.playGame(player1, player2);
-        } else if (gameMode.equals("2")) {
+        } 
+        else if (gameMode.equals("2")) {
             String aiDifficulty = "";
             while (!aiDifficulty.equals("1") && !aiDifficulty.equals("2") && !aiDifficulty.equals("3")) {
                 Battleship.clearScreen();
@@ -84,5 +85,6 @@ public class Main {
                 System.out.println("AI wins. Better luck next time!");
             }
         }
+        scanner.close();
     }
 }
