@@ -5,19 +5,21 @@ public class Battleship {
     private Scanner scanner = new Scanner(System.in);
 
     public void placeShip(Player player) {
-        int[] lengths = {5, 4, 3, 3, 2};
+        int[] lengths = { 5, 4, 3, 3, 2 };
         for (int z = 0; z < lengths.length; z++) {
             boolean validInput = false;
             while (!validInput) {
                 try {
-                    System.out.println("Enter Letter coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
+                    System.out.println(
+                            "Enter Letter coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
                     String letter = scanner.nextLine();
                     if (letter.isEmpty()) {
                         System.out.println("Invalid input, please enter a letter coordinate.");
                         continue;
                     }
                     char char1 = letter.charAt(0);
-                    System.out.println("Enter Number coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
+                    System.out.println(
+                            "Enter Number coordinates for Ship " + (z + 1) + " (Ship Length " + lengths[z] + ")");
                     if (!scanner.hasNextInt()) {
                         System.out.println("Invalid input, please enter a number coordinate.");
                         scanner.next(); // clear the invalid input
@@ -27,7 +29,8 @@ public class Battleship {
                     scanner.nextLine(); // consume the newline character
                     System.out.println("Enter Orientation for Ship (Horizontal(H) or Vertical(V))");
                     String orientation2 = scanner.nextLine();
-                    if (orientation2.isEmpty() || (!orientation2.equalsIgnoreCase("H") && !orientation2.equalsIgnoreCase("V"))) {
+                    if (orientation2.isEmpty()
+                            || (!orientation2.equalsIgnoreCase("H") && !orientation2.equalsIgnoreCase("V"))) {
                         System.out.println("Invalid input, please enter a valid orientation (H or V).");
                         continue;
                     }
@@ -39,8 +42,7 @@ public class Battleship {
                         printGameBoard(player.getGameBoard());
                         validInput = true;
                     }
-                } 
-                catch (Exception e) {
+                } catch (Exception e) {
                     System.out.println("Invalid input, please try again.");
                     scanner.nextLine(); // Clear invalid input
                 }
@@ -68,7 +70,8 @@ public class Battleship {
         }
     }
 
-    public static boolean checkCoordinateValidity(char row, int col, int length, String orientation, String[][] gameboard) {
+    public static boolean checkCoordinateValidity(char row, int col, int length, String orientation,
+            String[][] gameboard) {
         orientation = orientation.toUpperCase();
         row = Character.toUpperCase(row);
         int i = (int) row - 65 + 1;
@@ -173,8 +176,7 @@ public class Battleship {
                     gameBoard2[i][j] = "O";
                     return false;
                 }
-            } 
-            catch (Exception e) {
+            } catch (Exception e) {
                 System.out.println("Invalid input, please try again.");
                 scanner.nextLine(); // Clear invalid input
             }
@@ -187,11 +189,11 @@ public class Battleship {
         String[][] attackBoard = attacker.getAttackBoard();
         String[][] gameBoard2 = defender.getGameBoard();
         ArrayList<Ship> opponentShips = defender.getShips();
-    
+
         if (!attackBoard[i][j].equals("-")) {
             return false;
         }
-    
+
         boolean hit = false;
         boolean sunk = false;
         Ship sunkenShip = null;
@@ -206,7 +208,7 @@ public class Battleship {
                 break;
             }
         }
-    
+
         if (hit) {
             System.out.println("Hit");
             attackBoard[i][j] = "X";
@@ -223,25 +225,23 @@ public class Battleship {
             return false;
         }
     }
-    
-    
 
     public static void printScoreboard(Player one, Player two) {
         int playerOneLeft = 5;
         int playerTwoLeft = 5;
-    
+
         for (Ship ship : one.getShips()) {
             if (ship.isSunk()) {
                 playerOneLeft--;
             }
         }
-    
+
         for (Ship ship : two.getShips()) {
             if (ship.isSunk()) {
                 playerTwoLeft--;
             }
         }
-    
+
         System.out.println("Scoreboard:");
         System.out.println(one.getName() + " Ships Left - " + playerOneLeft);
         System.out.println(two.getName() + " Ships Left - " + playerTwoLeft);
@@ -252,8 +252,8 @@ public class Battleship {
         for (int[] coord : coordinates) {
             int i = coord[0];
             int j = coord[1];
-            attackBoard[i][j] = "\u001B[43mX\u001B[0m";  // BROWN_BACKGROUND
-            gameBoard2[i][j] = "\u001B[43mX\u001B[0m";   // BROWN_BACKGROUND
+            attackBoard[i][j] = "\u001B[43mX\u001B[0m"; // BROWN_BACKGROUND
+            gameBoard2[i][j] = "\u001B[43mX\u001B[0m"; // BROWN_BACKGROUND
         }
     }
 

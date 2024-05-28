@@ -26,18 +26,16 @@ public class Main {
             game.setupPlayer(player2);
 
             game.playGame(player1, player2);
-        } 
-        else if (gameMode.equals("2")) {
+        } else if (gameMode.equals("2")) {
             String aiDifficulty = "";
-            while (!aiDifficulty.equals("1") && !aiDifficulty.equals("2") && !aiDifficulty.equals("3")) {
+            while (!aiDifficulty.equals("1") && !aiDifficulty.equals("2")) {
                 Battleship.clearScreen();
                 System.out.println("Choose AI difficulty (Please enter 1, 2, or 3): ");
                 System.out.println("1. Easy AI");
-                System.out.println("2. Medium AI");
-                System.out.println("3. Hard AI");
+                System.out.println("2. Hard AI");
                 aiDifficulty = scanner.nextLine();
-                if (!aiDifficulty.equals("1") && !aiDifficulty.equals("2") && !aiDifficulty.equals("3")) {
-                    System.out.println("Invalid choice. Please enter 1, 2, or 3.");
+                if (!aiDifficulty.equals("1") && !aiDifficulty.equals("2")) {
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
                 }
             }
 
@@ -49,39 +47,29 @@ public class Main {
 
             if (aiDifficulty.equals("1")) {
                 ai.placeShipsEasy(aiPlayer);
-            } 
-            else if (aiDifficulty.equals("2")) {
-                ai.placeShipsMedium(aiPlayer);
-            } 
-            else if (aiDifficulty.equals("3")) {
+            } else if (aiDifficulty.equals("2")) {
                 ai.placeShipsHard(aiPlayer);
             }
 
             while (!game.ifPlayerHasWon(humanPlayer) && !game.ifPlayerHasWon(aiPlayer)) {
-                // Human player's turn to attack
-                game.attack(humanPlayer, aiPlayer);
+                // Human player's turn
 
-                // Check if AI has lost after human's turn
                 if (game.ifPlayerHasWon(aiPlayer)) {
-                    break;
+                    break; // AI wins
                 }
 
-                // AI's turn to attack
-                if (aiDifficulty.equals("1")) {
-                    ai.attackEasy(aiPlayer, humanPlayer);
-                }
-                else if (aiDifficulty.equals("2")) {
-                    ai.attackMedium(aiPlayer, humanPlayer);
-                } 
-                else if (aiDifficulty.equals("3")) {
-                    ai.attackHard(aiPlayer, humanPlayer);
+                // AI's turn
+                if (ai.playAI(aiPlayer, humanPlayer)) {
+                    System.out.println("AI's turn. AI attacked.");
+                } else {
+                    System.out.println("You've won! AI's ships are all sunk.");
+                    break; // Human player wins
                 }
             }
 
             if (game.ifPlayerHasWon(humanPlayer)) {
                 System.out.println("Congratulations! You win!");
-            } 
-            else {
+            } else {
                 System.out.println("AI wins. Better luck next time!");
             }
         }
