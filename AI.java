@@ -81,49 +81,8 @@ public class AI {
     }
 
     public boolean attackHard(Player aiPlayer, Player humanPlayer) {
-        if (!lastHitSuccessful) {
-            return randomAttack(aiPlayer, humanPlayer);
-        } else {
-            // Define the directions to check around the last successful hit
-            int[][] directionsAroundHit = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
-
-            // Sort directions based on their Manhattan distance from the last hit
-            // coordinates
-            Arrays.sort(directionsAroundHit, (dir1, dir2) -> {
-                int dist1 = Math.abs(dir1[0]) + Math.abs(dir1[1]);
-                int dist2 = Math.abs(dir2[0]) + Math.abs(dir2[1]);
-                return Integer.compare(dist1, dist2);
-            });
-
-            // Check each direction around the last hit
-            for (int[] direction : directionsAroundHit) {
-                int nextRow = lastHitRow + direction[0];
-                int nextCol = lastHitCol + direction[1];
-
-                // Check if the next coordinate is within the board boundaries
-                if (nextRow >= 0 && nextRow < 10 && nextCol >= 1 && nextCol <= 10) {
-                    // Check if the next coordinate is a valid attack
-                    if (Battleship.isValidAttack((char) (nextRow + 'A'), nextCol, aiPlayer.getAttackBoard())) {
-                        // Perform the attack
-                        lastHitSuccessful = Battleship.aiAttack(aiPlayer, humanPlayer, (char) (nextRow + 'A'), nextCol);
-                        // Update last hit coordinates if successful
-                        if (lastHitSuccessful) {
-                            lastHitRow = nextRow;
-                            lastHitCol = nextCol;
-                            return true;
-                        }
-                    }
-                }
-
-                // If the current direction doesn't have a ship, reset the direction index
-                if (!lastHitSuccessful && directionIndex == directions.length - 1) {
-                    directionIndex = 0;
-                }
-            }
-
-            // If all surrounding directions from the last hit fail, perform a random attack
-            return randomAttack(aiPlayer, humanPlayer);
-        }
+        //implement still
+        return false; //placeholders 
     }
 
     private boolean randomAttack(Player aiPlayer, Player humanPlayer) {
