@@ -53,6 +53,11 @@ public class Main {
 
             while (!game.ifPlayerHasWon(humanPlayer) && !game.ifPlayerHasWon(aiPlayer)) {
                 // Human player's turn
+                if (game.attack(humanPlayer, aiPlayer)) {
+                    System.out.println("Hit! You get to continue.");
+                } else {
+                    System.out.println("Miss! AI's turn.");
+                }
 
                 if (game.ifPlayerHasWon(aiPlayer)) {
                     break; // AI wins
