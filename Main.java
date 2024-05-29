@@ -1,107 +1,78 @@
-
-/*
- * Todo:
- * - GUI (just alter exisitng code to display stuff)
-    * figure out how to make window that shows everything 
-    * make gameboard, ships, hit/miss squares
-    * maybe implement clicking instead of typing (very hard)
-    * implement pop-up messages? that shows try again or win screen (not nescessary)
- * - GUI still to add
-    * backgrounds of ship are not connected
- * - AI
- */
-
- /*
- * Ship lengths: 5, 4, 3, 3, 2
- */
+import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
         Battleship game = new Battleship();
+        AI ai = new AI();
 
-        Player player1 = new Player("Red", 1);
-        Player player2 = new Player("Blue", 2);
-
-        boolean validInput = false;
-        while (!validInput) {
-            try {
-                game.printGameBoard(player1.getGameBoard());
-                game.placeShip(player1);
-                validInput = true;
-            } 
-            catch (Exception e) {
-                System.out.println("Please try again.");
+        String gameMode = "";
+        while (!gameMode.equals("1") && !gameMode.equals("2")) {
+            Battleship.clearScreen();
+            System.out.println("Do you want to play against another player or AI? (Please enter 1 or 2)");
+            System.out.println("1. Another Player");
+            System.out.println("2. AI");
+            gameMode = scanner.nextLine();
+            if (!gameMode.equals("1") && !gameMode.equals("2")) {
+                System.out.println("Invalid choice. Please enter 1 or 2.");
             }
         }
-
         Battleship.clearScreen();
+        if (gameMode.equals("1")) {
+            Player player1 = new Player("Red", 1);
+            Player player2 = new Player("Blue", 2);
 
-        validInput = false;
-        while (!validInput) {
-            try {
-                game.printGameBoard(player2.getGameBoard());
-                game.placeShip(player2);
-                validInput = true;
-            } 
-            catch (Exception e) {
-                System.out.println("Please try again.");
-            }
-        }
+            game.setupPlayer(player1);
+            game.setupPlayer(player2);
 
-        Battleship.clearScreen();
-
-        while (!game.ifPlayerHasWon(player1) && !game.ifPlayerHasWon(player2)) {
-            boolean player1Turn = true;
-            while (player1Turn) {
-                try {
-                    player1Turn = game.attack(player1, player2);
-                    if (game.ifPlayerHasWon(player2)) {
-                        break;
-                    }
-                    if (!player1Turn) {
-                        Battleship.clearScreen();
-                        System.out.println("Switch Turns");
-                        Battleship.printScoreboard(player1, player2);
-                        Battleship.delay(3000);
-                        Battleship.clearScreen();
-                    }
-                } 
-                catch (Exception e) {
-                    System.out.println("Please try again.");
+            game.playGame(player1, player2);
+        } else if (gameMode.equals("2")) {
+            String aiDifficulty = "";
+            while (!aiDifficulty.equals("1") && !aiDifficulty.equals("2")) {
+                Battleship.clearScreen();
+                System.out.println("Choose AI difficulty (Please enter 1, 2, or 3): ");
+                System.out.println("1. Easy AI");
+                System.out.println("2. Hard AI");
+                aiDifficulty = scanner.nextLine();
+                if (!aiDifficulty.equals("1") && !aiDifficulty.equals("2")) {
+                    System.out.println("Invalid choice. Please enter 1 or 2.");
                 }
             }
-            while (!player1Turn) {
-                try {
-                    player1Turn = !game.attack(player2, player1);
-                    if (game.ifPlayerHasWon(player1)) {
-                        break;
-                    }
-                    if (player1Turn) {
-                        Battleship.clearScreen();
-                        System.out.println("Switch Turns");
-                        Battleship.printScoreboard(player1, player2);
-                        Battleship.delay(3000);
-                        Battleship.clearScreen();
-                    }
-                } 
-                catch (Exception e) {
-                    System.out.println("Please try again.");
+
+            Player humanPlayer = new Player("Human", 1);
+            Player aiPlayer = new Player("AI", 2);
+
+            game.setupPlayer(humanPlayer);
+            Battleship.clearScreen();
+
+            if (aiDifficulty.equals("1")) {
+                ai.placeShipsEasy(aiPlayer);
+            } else if (aiDifficulty.equals("2")) {
+                ai.placeShipsHard(aiPlayer);
+            }
+
+            while (!game.ifPlayerHasWon(humanPlayer) && !game.ifPlayerHasWon(aiPlayer)) {
+                // Human player's turn
+
+                if (game.ifPlayerHasWon(aiPlayer)) {
+                    break; // AI wins
+                }
+
+                // AI's turn
+                if (ai.playAI(aiPlayer, humanPlayer)) {
+                    System.out.println("AI's turn. AI attacked.");
+                } else {
+                    System.out.println("You've won! AI's ships are all sunk.");
+                    break; // Human player wins
                 }
             }
-        }
 
-        if (game.ifPlayerHasWon(player2)) {
-            Battleship.clearScreen();
-            System.out.println("Team Red Has Won");
+            if (game.ifPlayerHasWon(humanPlayer)) {
+                System.out.println("Congratulations! You win!");
+            } else {
+                System.out.println("AI wins. Better luck next time!");
+            }
         }
-        if (game.ifPlayerHasWon(player1)) {
-            Battleship.clearScreen();
-            System.out.println("Team Blue Has Won");
-        }
+        scanner.close();
     }
 }
-
-
-/*
- * Ship lengths: 5, 4, 3, 3, 2
- */

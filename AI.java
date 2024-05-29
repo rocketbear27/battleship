@@ -1,4 +1,5 @@
 import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.Random;
 
 public class AI {
@@ -6,9 +7,35 @@ public class AI {
     private int lastHitRow = -1;
     private int lastHitCol = -1;
     private boolean lastHitSuccessful = false;
-    private int directionIndex = 0;
-    private final int[][] directions = { { -1, 0 }, { 0, 1 }, { 1, 0 }, { 0, -1 } };
+    private ArrayList<int[]> coordinates = new ArrayList<int[]>();
 
+    /*
+     * if lastHit is false and coord is empty
+     * {
+     * random gen
+     * if (hit)
+     * {
+     * lastHit = true
+     * coordinates.add(all coordinates around it) //make new method that checks if
+     * coord is valid
+     * }
+     * }
+     * else {
+     * if (lastHit is true and coord is not emty)
+     * {
+     * pick a random coordinate from coordinates to attack
+     * if (hit)
+     * }
+     * else if (last hit is false and coord is not empty)
+     * {
+     * if (hit)
+     * {
+     * lastHit = true
+     * coordinates.add(all coordinates around it)
+     * }
+     * }
+     * }
+     */
     public boolean playAI(Player aiPlayer, Player humanPlayer) {
         boolean aiTurn = true;
         boolean continuePlaying = true;
@@ -81,8 +108,8 @@ public class AI {
     }
 
     public boolean attackHard(Player aiPlayer, Player humanPlayer) {
-        //implement still
-        return false; //placeholders 
+        // implement still
+        return false; // placeholders
     }
 
     private boolean randomAttack(Player aiPlayer, Player humanPlayer) {
