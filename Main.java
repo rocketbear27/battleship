@@ -19,6 +19,7 @@ public class Main {
         }
         Battleship.clearScreen();
         if (gameMode.equals("1")) {
+            // Player vs Player
             Player player1 = new Player("Red", 1);
             Player player2 = new Player("Blue", 2);
 
@@ -30,7 +31,7 @@ public class Main {
             String aiDifficulty = "";
             while (!aiDifficulty.equals("1") && !aiDifficulty.equals("2")) {
                 Battleship.clearScreen();
-                System.out.println("Choose AI difficulty (Please enter 1, 2, or 3): ");
+                System.out.println("Choose AI difficulty (Please enter 1 or 2): ");
                 System.out.println("1. Easy AI");
                 System.out.println("2. Hard AI");
                 aiDifficulty = scanner.nextLine();
@@ -43,33 +44,57 @@ public class Main {
             Player aiPlayer = new Player("AI", 2);
 
             game.setupPlayer(humanPlayer);
-            Battleship.clearScreen();
-
             if (aiDifficulty.equals("1")) {
                 ai.placeShipsEasy(aiPlayer);
-            } else if (aiDifficulty.equals("2")) {
+            } else {
                 ai.placeShipsHard(aiPlayer);
             }
 
             while (!game.ifPlayerHasWon(humanPlayer) && !game.ifPlayerHasWon(aiPlayer)) {
-                // Human player's turn
-
-                if (game.ifPlayerHasWon(aiPlayer)) {
-                    break; // AI wins
+                boolean humanTurn = true;
+                while (humanTurn) {
+                    Battleship.clearScreen();
+                    humanTurn = game.attack(humanPlayer, aiPlayer);
+                    if (game.ifPlayerHasWon(aiPlayer)) {
+                        break;
+                    }
+                    if (!humanTurn)
+                        if (game.ifPlayerHasWon(aiPlayer)) {
+                            break;
+                        }
+                    if (!humanTurn) {
+                        Battleship.clearScreen();
+                        System.out.println("You Missed");
+                        System.out.println("AI's Turn");
+                        Battleship.printScoreboard(humanPlayer, aiPlayer);
+                        Battleship.delay(3000);
+                        Battleship.clearScreen();
+                    }
                 }
-
-                // AI's turn
-                if (ai.playAI(aiPlayer, humanPlayer, aiDifficulty)) {
-                    System.out.println("AI's turn. AI attacked.");
-                } else {
-                    System.out.println("You've won! AI's ships are all sunk.");
-                    break; // Human player wins
+                while (!humanTurn) {
+                    Battleship.clearScreen();
+                    if (aiDifficulty.equals("1")) {
+                        humanTurn = !ai.attackEasy(aiPlayer, humanPlayer);
+                    } else {
+                        humanTurn = !ai.attackHard(aiPlayer, humanPlayer);
+                    }
+                    if (game.ifPlayerHasWon(humanPlayer)) {
+                        break;
+                    }
+                    if (humanTurn) {
+                        Battleship.clearScreen();
+                        System.out.println("AI Missed");
+                        System.out.println("Your Turn");
+                        Battleship.printScoreboard(humanPlayer, aiPlayer);
+                        Battleship.delay(3000);
+                        Battleship.clearScreen();
+                    }
                 }
             }
-
-            if (game.ifPlayerHasWon(humanPlayer)) {
+            if (game.ifPlayerHasWon(aiPlayer)) {
                 System.out.println("Congratulations! You win!");
-            } else {
+            }
+            if (game.ifPlayerHasWon(humanPlayer)) {
                 System.out.println("AI wins. Better luck next time!");
             }
         }

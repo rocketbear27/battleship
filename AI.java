@@ -6,61 +6,34 @@ public class AI {
     private boolean lastHit = false;
     private ArrayList<int[]> coordinates = new ArrayList<int[]>();
 
-    /*
-     * coordinates is an array list of int arrays
-     * if (lastHit is false and coord is empty)
-     * {
-     * random gen
-     * if (hit)
-     * {
-     * lastHit = true
-     * coordinates.add(all coordinates around it) //make new method that checks if
-     * coord valid
-     * }
-     * }
-     * else if (coord is not empty) {
-     * guess at one of coords in coordinates
-     * if (hit and ship is not sunk) {
-     * make new coords based on hit (go up or down if ship is vertical or left or
-     * right
-     * if ship is horiz)
-     * }
-     * if (hit and ship is sunk) {
-     * lastHit = false
-     * empty coordinates
-     * }
-     * if (miss) {
-     * delete that from coordinate
-     * }
-     * }
-     */
     public boolean playAI(Player aiPlayer, Player humanPlayer, String aiDifficulty) {
-        boolean continuePlaying = true;
         Battleship game = new Battleship();
-
-        while (continuePlaying) {
+        while (true) {
             if (game.ifPlayerHasWon(aiPlayer)) {
-                return false; // Human player has won
+                return false;
             }
-
-            // Determine which attack method to use based on AI difficulty
-            boolean attackResult;
-            if (aiDifficulty.equals("2")) {
-                attackResult = attackHard(aiPlayer, humanPlayer);
-            } else {
-                attackResult = attackEasy(aiPlayer, humanPlayer);
-            }
-
-            if (!attackResult) {
-                continuePlaying = false;
+            if (!attackEasy(aiPlayer, humanPlayer)) {
+                continue;
             }
 
             if (game.ifPlayerHasWon(humanPlayer)) {
-                return false;
+                return true;
+            }
+
+            if (aiDifficulty.equals("2")) {
+                if (!attackHard(aiPlayer, humanPlayer)) {
+                    continue;
+                }
+            } else {
+                if (!attackEasy(aiPlayer, humanPlayer)) {
+                    continue;
+                }
+            }
+
+            if (game.ifPlayerHasWon(aiPlayer)) {
+                return true;
             }
         }
-
-        return true;
     }
 
     public void placeShipsEasy(Player aiPlayer) {
@@ -118,6 +91,7 @@ public class AI {
             if (Battleship.isValidAttack(row, col, aiPlayer.getAttackBoard())) {
                 boolean hit = Battleship.aiAttack(aiPlayer, humanPlayer, row, col);
                 if (hit) {
+                    humanPlayer.setCurrentTargetShip(humanPlayer.getShipAt(row, col));
                     addSurroundingCoordinates(row, col, humanPlayer);
                     lastHit = true;
                 }
@@ -134,14 +108,23 @@ public class AI {
             if (Battleship.isValidAttack(row, col, aiPlayer.getAttackBoard())) {
                 boolean hit = Battleship.aiAttack(aiPlayer, humanPlayer, row, col);
                 if (hit) {
+                    humanPlayer.setCurrentTargetShip(humanPlayer.getShipAt(row, col));
                     if (isShipSunk(humanPlayer, row, col)) {
                         lastHit = false;
                         coordinates.clear();
                     } else {
                         addSurroundingCoordinates(row, col, humanPlayer);
                     }
+                    if (!coordinates.isEmpty()) {
+                        coord = coordinates.get(0);
+                        row = (char) (coord[0] + 'A');
+                        col = coord[1];
+                    }
+                    return hit;
+                } else {
+                    lastHit = false;
+                    return false;
                 }
-                return hit;
             }
         }
         lastHit = false;
@@ -151,18 +134,37 @@ public class AI {
     private void addSurroundingCoordinates(int row, int col, Player humanPlayer) {
         int[][] potentialCoordinates;
 
-        if (lastHit) {
-            Ship lastHitShip = humanPlayer.getShips().get(humanPlayer.getShips().size() - 1);
-            if (lastHitShip.getOrientation().equals("H")) {
-                potentialCoordinates = new int[][] { { row, col - 1 }, { row, col + 1 } };
-            } else {
-                potentialCoordinates = new int[][] { { row - 1, col }, { row + 1, col } };
+        Ship lastHitShip = humanPlayer.getCurrentTargetShip();
+
+        if (lastHitShip != null && lastHitShip.getOrientation().equals("H")) {
+            potentialCoordinates = new int[][] { { row, col - 1 }, { row, col + 1 } };
+            for (int i = 0; i < potentialCoordinates.length; i++) {
+                if (isValidCoordinate(potentialCoordinates[i][0], potentialCoordinates[i][1])) {
+                    coordinates.add(potentialCoordinates[i]);
+                } else {
+                    if (i == 0) {
+                        potentialCoordinates = new int[][] { { row, col - 2 } };
+                    } else {
+                        potentialCoordinates = new int[][] { { row, col + 2 } };
+                    }
+                }
+            }
+        } else if (lastHitShip != null & lastHitShip.getOrientation().equals("V")) {
+            potentialCoordinates = new int[][] { { row - 1, col }, { row + 1, col } };
+            for (int i = 0; i < potentialCoordinates.length; i++) {
+                if (isValidCoordinate(potentialCoordinates[i][0], potentialCoordinates[i][1])) {
+                    coordinates.add(potentialCoordinates[i]);
+                } else {
+                    if (i == 0) {
+                        potentialCoordinates = new int[][] { { row - 2, col } };
+                    } else {
+                        potentialCoordinates = new int[][] { { row + 2, col } };
+                    }
+                }
             }
         } else {
-            // If lastHit is false, add coordinates around the hit position
-            potentialCoordinates = new int[][] {
-                    { row - 1, col }, { row + 1, col }, { row, col - 1 }, { row, col + 1 }
-            };
+            potentialCoordinates = new int[][] { { row - 1, col }, { row + 1, col }, { row, col - 1 },
+                    { row, col + 1 } };
         }
 
         for (int[] coord : potentialCoordinates) {

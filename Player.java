@@ -5,6 +5,7 @@ public class Player {
     private String[][] gameBoard;
     private String[][] attackBoard;
     private String name;
+    private Ship currentTargetShip;
 
     public Player(String name, int playerNumber) {
         this.ships = new ArrayList<>();
@@ -52,5 +53,22 @@ public class Player {
             board[0][b] = String.valueOf(b);
         }
         return board;
+    }
+
+    public Ship getCurrentTargetShip() {
+        return currentTargetShip;
+    }
+
+    public void setCurrentTargetShip(Ship ship) {
+        currentTargetShip = ship;
+    }
+
+    public Ship getShipAt(char row, int col) {
+        for (Ship ship : ships) {
+            if (ship.containsCoordinate(row, col)) {
+                return ship;
+            }
+        }
+        return null; // No ship found at the specified coordinate
     }
 }

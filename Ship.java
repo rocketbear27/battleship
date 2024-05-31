@@ -58,4 +58,29 @@ public class Ship {
     public String getOrientation() {
         return orientation;
     }
+
+    public boolean containsCoordinate(char inRow, int inCol) {
+        char startRow = row;
+        int startCol = col;
+
+        int endCol;
+        char endRow;
+
+        if (getOrientation().equals("H")) {
+            endCol = startCol + length - 1;
+            endRow = startRow;
+        } else {
+            endCol = startCol;
+            endRow = (char) (startRow + length - 1);
+        }
+
+        if (inRow >= startRow && inRow <= endRow && inCol >= startCol && inCol <= endCol) {
+            if (getOrientation().equals("H")) {
+                return inRow == startRow && inCol >= startCol && inCol <= endCol;
+            } else {
+                return inCol == startCol && inRow >= startRow && inRow <= endRow;
+            }
+        }
+        return false;
+    }
 }
