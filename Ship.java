@@ -45,11 +45,11 @@ public class Ship {
         int startRow = (int) row - 65 + 1;
         if (orientation.equals("H")) {
             for (int i = 0; i < length; i++) {
-                coordinates.add(new int[]{startRow, col + i});
+                coordinates.add(new int[] { startRow, col + i });
             }
         } else if (orientation.equals("V")) {
             for (int i = 0; i < length; i++) {
-                coordinates.add(new int[]{startRow + i, col});
+                coordinates.add(new int[] { startRow + i, col });
             }
         }
         return coordinates;

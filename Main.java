@@ -59,7 +59,7 @@ public class Main {
                 }
 
                 // AI's turn
-                if (ai.playAI(aiPlayer, humanPlayer)) {
+                if (ai.playAI(aiPlayer, humanPlayer, aiDifficulty)) {
                     System.out.println("AI's turn. AI attacked.");
                 } else {
                     System.out.println("You've won! AI's ships are all sunk.");

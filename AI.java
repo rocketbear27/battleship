@@ -34,7 +34,7 @@ public class AI {
      * }
      * }
      */
-    public boolean playAI(Player aiPlayer, Player humanPlayer) {
+    public boolean playAI(Player aiPlayer, Player humanPlayer, String aiDifficulty) {
         boolean continuePlaying = true;
         Battleship game = new Battleship();
 
@@ -42,9 +42,19 @@ public class AI {
             if (game.ifPlayerHasWon(aiPlayer)) {
                 return false; // Human player has won
             }
-            if (!attackHard(aiPlayer, humanPlayer)) {
+
+            // Determine which attack method to use based on AI difficulty
+            boolean attackResult;
+            if (aiDifficulty.equals("2")) {
+                attackResult = attackHard(aiPlayer, humanPlayer);
+            } else {
+                attackResult = attackEasy(aiPlayer, humanPlayer);
+            }
+
+            if (!attackResult) {
                 continuePlaying = false;
             }
+
             if (game.ifPlayerHasWon(humanPlayer)) {
                 return false;
             }
